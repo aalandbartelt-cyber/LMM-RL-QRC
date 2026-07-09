@@ -72,6 +72,12 @@ LMM-RL-QRC/
   third_party/             # Notes for external repos; do not vendor huge code
 ```
 
+## Git Quickstart
+
+Team members new to Git can read:
+
+- `docs/git_quickstart.md`
+
 ## Group Interfaces
 
 ### LLM Decision -> Simulation
