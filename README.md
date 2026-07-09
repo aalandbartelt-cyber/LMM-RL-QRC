@@ -202,10 +202,18 @@ docs/weekly-update
 
 ## References
 
+Local reference files are indexed in `docs/references/`.
+
+- `docs/references/contest/DG-202609比赛方案.pdf`
+- `docs/references/learning/参考.md`
+- `docs/references/learning/2604.08508v2.pdf`
+- `docs/references/learning/面向复杂地形的四足机器人RL-MPC分层运动控制方法研究_王留东.pdf`
+
+External references recorded so far:
+
 - MathFoundationRL, Mathematical Foundations of Reinforcement Learning
 - Sumo: Dynamic and Generalizable Whole-Body Loco-Manipulation
 - Toward Reliable Sim-to-Real Predictability for MoE-based Robust Quadrupedal Locomotion
 - RoboGauge
 - go2_rl_gym
 - unitree_cpp_deploy
-- 面向复杂地形的四足机器人 RL-MPC 分层运动控制方法研究
