@@ -1,0 +1,17 @@
+{
+  "task_id": "rescue_001",
+  "scene": "disaster_response",
+  "goal": "search_and_deliver",
+  "steps": [
+    {"action": "go_to", "target": "search_area"},
+    {"action": "inspect", "target": "target_marker"},
+    {"action": "go_to", "target": "delivery_point"},
+    {"action": "deliver", "target": "small_package"},
+    {"action": "return_home"}
+  ],
+  "safety": {
+    "max_speed": 0.35,
+    "timeout_sec": 240,
+    "allow_stairs": true
+  }
+}

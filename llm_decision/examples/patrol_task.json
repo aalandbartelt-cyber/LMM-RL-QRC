@@ -1,0 +1,17 @@
+{
+  "task_id": "patrol_001",
+  "scene": "park_patrol",
+  "goal": "patrol_and_report",
+  "steps": [
+    {"action": "go_to", "target": "p1"},
+    {"action": "inspect", "target": "sign_1"},
+    {"action": "go_to", "target": "p2"},
+    {"action": "report", "content": "patrol_finished"},
+    {"action": "return_home"}
+  ],
+  "safety": {
+    "max_speed": 0.5,
+    "timeout_sec": 180,
+    "allow_stairs": false
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QuadrupedTask",
+  "type": "object",
+  "required": ["task_id", "scene", "goal", "steps", "safety"],
+  "properties": {
+    "task_id": {"type": "string"},
+    "scene": {"type": "string"},
+    "goal": {"type": "string"},
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["action"],
+        "properties": {
+          "action": {"type": "string"},
+          "target": {"type": "string"},
+          "content": {"type": "string"}
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "properties": {
+        "max_speed": {"type": "number", "minimum": 0},
+        "timeout_sec": {"type": "number", "minimum": 1},
+        "allow_stairs": {"type": "boolean"}
+      }
+    }
+  }
+}
