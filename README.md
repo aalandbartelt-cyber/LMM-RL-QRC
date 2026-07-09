@@ -69,7 +69,7 @@ LMM-RL-QRC/
   scripts/                 # Utility scripts
   assets/                  # Images, diagrams, demo screenshots
   weekly_reports/          # Weekly deliverables and progress records
-  third_party/             # Notes for external repos; do not vendor huge code
+  third_party/             # Contest files, local papers, and external resource index
 ```
 
 ## Git Quickstart
@@ -187,7 +187,7 @@ weekly_reports/2026-07-12/
 - Keep every module runnable from a documented command.
 - Every experiment must save a log or CSV result.
 - Do not commit large datasets, checkpoints, or videos directly unless they are small demo assets.
-- Record external repositories in `third_party/README.md` instead of copying them wholesale.
+- Record external repositories and reference links in `third_party/README.md` instead of copying full repos.
 - Prefer JSON/YAML schemas for cross-group interfaces.
 - Use English for code identifiers and filenames; Chinese is fine in Markdown notes.
 - Every weekly deliverable should include one of: code, log, screenshot, video link, metric table, or design note.
@@ -208,18 +208,13 @@ docs/weekly-update
 
 ## References
 
-Local reference files are indexed in `docs/references/`.
+All contest files, local papers, and external resource links are indexed in:
 
-- `docs/references/contest/DG-202609比赛方案.pdf`
-- `docs/references/learning/参考.md`
-- `docs/references/learning/2604.08508v2.pdf`
-- `docs/references/learning/面向复杂地形的四足机器人RL-MPC分层运动控制方法研究_王留东.pdf`
+- `third_party/README.md`
 
-External references recorded so far:
+Key local files:
 
-- MathFoundationRL, Mathematical Foundations of Reinforcement Learning
-- Sumo: Dynamic and Generalizable Whole-Body Loco-Manipulation
-- Toward Reliable Sim-to-Real Predictability for MoE-based Robust Quadrupedal Locomotion
-- RoboGauge
-- go2_rl_gym
-- unitree_cpp_deploy
+- `third_party/contest/DG-202609比赛方案.pdf`
+- `third_party/learning/参考.md`
+- `third_party/learning/2604.08508v2.pdf`
+- `third_party/learning/面向复杂地形的四足机器人RL-MPC分层运动控制方法研究_王留东.pdf`

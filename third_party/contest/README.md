@@ -1,6 +1,6 @@
-# Contest References
+# Contest
 
-Official challenge documents.
+Official challenge documents. This folder is part of the unified `third_party/` reference hub.
 
 ## Files
 

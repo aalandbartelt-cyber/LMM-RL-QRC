@@ -1,6 +1,6 @@
-# Learning References
+# Learning
 
-Technical references collected for simulation, decision, and reinforcement-learning work.
+Technical references collected for simulation, decision, and reinforcement-learning work. This folder stores local copies and notes; external links are indexed in `../README.md`.
 
 ## Files
 
