@@ -30,6 +30,14 @@ Internal design docs stay in `docs/`. External references and local reference fi
 | Primary | Unitree C++ Deploy | https://github.com/wty-yy/unitree_cpp_deploy | Deployment code | RL-H, Deployment | Reference for ONNX/C++ real-robot deployment |
 | Primary | RL-MPC paper DOI | https://doi.org/10.19886/j.cnki.dhdz.2025.0438 | Paper source | RL-F | Reference for safe hierarchical RL-MPC framing |
 | Primary | Sumo project page | https://sumo.rai-inst.com/ | Project page | LLM-D, Simulation-A, RL-F | Reference for high-level planning steering low-level learned policy |
+| Primary | DrEureka | https://arxiv.org/abs/2406.01967 | Paper | RL-F, Simulation-A | LLM-guided reward generation and domain randomization for Sim2Real |
+| Primary | DrEureka project page | https://eureka-research.github.io/dr-eureka/ | Project page/code | RL-F, Simulation-A | Study open-source reward/DR examples and sim-to-real workflow |
+| Primary | Long-horizon Locomotion and Manipulation with LLMs | https://arxiv.org/abs/2404.05291 | Paper | LLM-D, RL-G | Reference for LLM multi-agent planning over RL skill APIs |
+| Primary | Long-horizon robot project page | https://sites.google.com/view/long-horizon-robot | Project page | LLM-D | Study skill API design, prompt decomposition, and executable robot code style |
+| Primary | AINav: LLM-Based Adaptive Interactive Navigation | https://arxiv.org/abs/2503.22942 | Paper | LLM-D, Simulation-B | Reference for disaster/cluttered-scene navigation, primitive trees, and replanning |
+| Candidate | MoRE quadruped VLA | https://arxiv.org/abs/2503.08007 | Paper | LLM-D, RL-F | Later reference for VLA/MoE architecture and RL fine-tuning |
+| Candidate | SayTap | https://arxiv.org/abs/2306.07580 | Paper | LLM-D, RL-G | Lightweight language-to-gait idea using foot contact patterns as the interface |
+| Candidate | SayTap project page | https://saytap.github.io/ | Project page | LLM-D, RL-G | Reference for contact-pattern prompt design and gait-command interface |
 | Candidate | SWAP project page | https://swap-parkour.github.io/ | Project page | RL-F | Later-stage reference for agile locomotion/world-model ideas |
 | Candidate | SWAP arXiv | https://arxiv.org/abs/2606.19928 | Paper | RL-F | Later-stage reading, not first-week implementation |
 | Candidate | SWAP IEEE paper | https://ieeexplore.ieee.org/abstract/document/11495396 | Paper | RL-F | Optional academic reference |
