@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "policy": "/home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx",
+  "video": "/home/jovyan/go2_work/video_evidence_20260730/05_targeted_cross_slope.mp4",
+  "duration_seconds": 15.0,
+  "frames": 442,
+  "label": "05_targeted_cross_slope",
+  "terrain": "cross_slope.xml",
+  "command_x": 0.30000001192092896,
+  "command_y": 0.0,
+  "command_yaw": 0.0,
+  "forward_distance": 2.535351092635826,
+  "minimum_base_height": 0.32065735186597455,
+  "final_base_height": 0.6185922770902659,
+  "video_size_bytes": 3299965
+}

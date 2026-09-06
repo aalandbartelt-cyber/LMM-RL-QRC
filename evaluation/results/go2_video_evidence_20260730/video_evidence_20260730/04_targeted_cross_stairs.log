@@ -1,0 +1,29 @@
+/home/jovyan/conda/envs/go2render/lib/python3.10/site-packages/imageio_ffmpeg/_utils.py:7: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Policy: /home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx
+ONNX input: obs [1, 45]
+time= 0.00s x=+0.000 height=0.445 vx=+0.028
+time= 2.00s x=+0.062 height=0.346 vx=+0.013
+time= 4.00s x=+0.207 height=0.355 vx=+0.007
+time= 6.00s x=+0.236 height=0.352 vx=-0.008
+time= 8.00s x=+0.242 height=0.342 vx=+0.009
+time=10.00s x=+0.246 height=0.344 vx=+0.003
+time=12.00s x=+0.249 height=0.341 vx=+0.002
+time=14.00s x=+0.251 height=0.337 vx=+0.002
+{
+  "status": "PASS",
+  "policy": "/home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx",
+  "video": "/home/jovyan/go2_work/video_evidence_20260730/04_targeted_cross_stairs.mp4",
+  "duration_seconds": 15.0,
+  "frames": 442,
+  "label": "04_targeted_cross_stairs",
+  "terrain": "cross_stairs.xml",
+  "command_x": 0.2199999988079071,
+  "command_y": 0.0,
+  "command_yaw": 0.0,
+  "forward_distance": 0.2521342933984776,
+  "minimum_base_height": 0.32065735186597455,
+  "final_base_height": 0.3353166002724431,
+  "video_size_bytes": 2155573
+}
+GO2 POLICY VIDEO PASS

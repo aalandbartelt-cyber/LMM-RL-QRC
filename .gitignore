@@ -44,3 +44,8 @@ evaluation/plots/**/*.png
 # Keep placeholder files
 !.gitkeep
 !README.md
+
+# Versioned evaluation evidence
+!evaluation/results/**/*.mp4
+!evaluation/results/**/*.csv
+!evaluation/results/**/*.log

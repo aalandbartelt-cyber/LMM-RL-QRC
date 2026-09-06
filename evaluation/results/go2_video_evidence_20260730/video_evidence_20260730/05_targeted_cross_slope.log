@@ -1,0 +1,29 @@
+/home/jovyan/conda/envs/go2render/lib/python3.10/site-packages/imageio_ffmpeg/_utils.py:7: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Policy: /home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx
+ONNX input: obs [1, 45]
+time= 0.00s x=+0.000 height=0.445 vx=+0.028
+time= 2.00s x=+0.137 height=0.344 vx=+0.235
+time= 4.00s x=+0.607 height=0.352 vx=+0.260
+time= 6.00s x=+1.120 height=0.353 vx=+0.261
+time= 8.00s x=+1.637 height=0.355 vx=+0.244
+time=10.00s x=+1.978 height=0.356 vx=+0.005
+time=12.00s x=+2.289 height=0.475 vx=+0.034
+time=14.00s x=+2.439 height=0.599 vx=+0.116
+{
+  "status": "PASS",
+  "policy": "/home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx",
+  "video": "/home/jovyan/go2_work/video_evidence_20260730/05_targeted_cross_slope.mp4",
+  "duration_seconds": 15.0,
+  "frames": 442,
+  "label": "05_targeted_cross_slope",
+  "terrain": "cross_slope.xml",
+  "command_x": 0.30000001192092896,
+  "command_y": 0.0,
+  "command_yaw": 0.0,
+  "forward_distance": 2.535351092635826,
+  "minimum_base_height": 0.32065735186597455,
+  "final_base_height": 0.6185922770902659,
+  "video_size_bytes": 3299965
+}
+GO2 POLICY VIDEO PASS

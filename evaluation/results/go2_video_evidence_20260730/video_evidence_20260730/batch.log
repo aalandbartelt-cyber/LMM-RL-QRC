@@ -1,0 +1,214 @@
+
+===== START: 01_targeted_flat_forward =====
+Terrain=flat.xml Duration=10 Command=[0.50,0.00,0.00]
+Start=2026-07-29T18:42:57+00:00
+/home/jovyan/conda/envs/go2render/lib/python3.10/site-packages/imageio_ffmpeg/_utils.py:7: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Policy: /home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx
+ONNX input: obs [1, 45]
+time= 0.00s x=+0.000 height=0.445 vx=+0.028
+time= 2.00s x=+0.325 height=0.340 vx=+0.474
+time= 4.00s x=+1.167 height=0.328 vx=+0.349
+time= 6.00s x=+1.960 height=0.328 vx=+0.364
+time= 8.00s x=+2.761 height=0.329 vx=+0.387
+{
+  "status": "PASS",
+  "policy": "/home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx",
+  "video": "/home/jovyan/go2_work/video_evidence_20260730/01_targeted_flat_forward.mp4",
+  "duration_seconds": 10.0,
+  "frames": 295,
+  "label": "01_targeted_flat_forward",
+  "terrain": "flat.xml",
+  "command_x": 0.5,
+  "command_y": 0.0,
+  "command_yaw": 0.0,
+  "forward_distance": 3.5570034177702117,
+  "minimum_base_height": 0.32065735186597455,
+  "final_base_height": 0.32976625615838007,
+  "video_size_bytes": 2905421
+}
+GO2 POLICY VIDEO PASS
+Exit code=0
+End=2026-07-29T18:44:57+00:00
+===== END: 01_targeted_flat_forward =====
+
+===== START: 02_targeted_flat_turn_left =====
+Terrain=flat.xml Duration=10 Command=[0.25,0.00,0.50]
+Start=2026-07-29T18:44:57+00:00
+/home/jovyan/conda/envs/go2render/lib/python3.10/site-packages/imageio_ffmpeg/_utils.py:7: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Policy: /home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx
+ONNX input: obs [1, 45]
+time= 0.00s x=+0.000 height=0.445 vx=+0.028
+time= 2.00s x=+0.076 height=0.353 vx=+0.215
+time= 4.00s x=+0.320 height=0.337 vx=+0.196
+time= 6.00s x=+0.188 height=0.355 vx=+0.141
+time= 8.00s x=-0.129 height=0.347 vx=+0.272
+{
+  "status": "PASS",
+  "policy": "/home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx",
+  "video": "/home/jovyan/go2_work/video_evidence_20260730/02_targeted_flat_turn_left.mp4",
+  "duration_seconds": 10.0,
+  "frames": 295,
+  "label": "02_targeted_flat_turn_left",
+  "terrain": "flat.xml",
+  "command_x": 0.25,
+  "command_y": 0.0,
+  "command_yaw": 0.5,
+  "forward_distance": -0.49110667931617125,
+  "minimum_base_height": 0.32065735186597455,
+  "final_base_height": 0.35562117961993767,
+  "video_size_bytes": 2657759
+}
+GO2 POLICY VIDEO PASS
+Exit code=0
+End=2026-07-29T18:46:53+00:00
+===== END: 02_targeted_flat_turn_left =====
+
+===== START: 03_targeted_stairs_forward =====
+Terrain=stairs.xml Duration=18 Command=[0.32,0.00,0.00]
+Start=2026-07-29T18:46:53+00:00
+/home/jovyan/conda/envs/go2render/lib/python3.10/site-packages/imageio_ffmpeg/_utils.py:7: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Policy: /home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx
+ONNX input: obs [1, 45]
+time= 0.00s x=+0.000 height=0.445 vx=+0.028
+time= 2.00s x=+0.155 height=0.348 vx=+0.258
+time= 4.00s x=+0.666 height=0.353 vx=+0.269
+time= 6.00s x=+1.176 height=0.364 vx=+0.272
+time= 8.00s x=+1.466 height=0.391 vx=-0.044
+time=10.00s x=+1.749 height=0.446 vx=+0.161
+time=12.00s x=+2.101 height=0.511 vx=+0.153
+time=14.00s x=+2.505 height=0.589 vx=-0.060
+time=16.00s x=+2.894 height=0.654 vx=+0.285
+{
+  "status": "PASS",
+  "policy": "/home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx",
+  "video": "/home/jovyan/go2_work/video_evidence_20260730/03_targeted_stairs_forward.mp4",
+  "duration_seconds": 18.0,
+  "frames": 530,
+  "label": "03_targeted_stairs_forward",
+  "terrain": "stairs.xml",
+  "command_x": 0.3199999928474426,
+  "command_y": 0.0,
+  "command_yaw": 0.0,
+  "forward_distance": 3.2646261982787137,
+  "minimum_base_height": 0.30502203619034773,
+  "final_base_height": 0.67830093535577,
+  "video_size_bytes": 4383443
+}
+GO2 POLICY VIDEO PASS
+Exit code=0
+End=2026-07-29T18:49:49+00:00
+===== END: 03_targeted_stairs_forward =====
+
+===== START: 04_targeted_cross_stairs =====
+Terrain=cross_stairs.xml Duration=15 Command=[0.22,0.00,0.00]
+Start=2026-07-29T18:49:49+00:00
+/home/jovyan/conda/envs/go2render/lib/python3.10/site-packages/imageio_ffmpeg/_utils.py:7: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Policy: /home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx
+ONNX input: obs [1, 45]
+time= 0.00s x=+0.000 height=0.445 vx=+0.028
+time= 2.00s x=+0.062 height=0.346 vx=+0.013
+time= 4.00s x=+0.207 height=0.355 vx=+0.007
+time= 6.00s x=+0.236 height=0.352 vx=-0.008
+time= 8.00s x=+0.242 height=0.342 vx=+0.009
+time=10.00s x=+0.246 height=0.344 vx=+0.003
+time=12.00s x=+0.249 height=0.341 vx=+0.002
+time=14.00s x=+0.251 height=0.337 vx=+0.002
+{
+  "status": "PASS",
+  "policy": "/home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx",
+  "video": "/home/jovyan/go2_work/video_evidence_20260730/04_targeted_cross_stairs.mp4",
+  "duration_seconds": 15.0,
+  "frames": 442,
+  "label": "04_targeted_cross_stairs",
+  "terrain": "cross_stairs.xml",
+  "command_x": 0.2199999988079071,
+  "command_y": 0.0,
+  "command_yaw": 0.0,
+  "forward_distance": 0.2521342933984776,
+  "minimum_base_height": 0.32065735186597455,
+  "final_base_height": 0.3353166002724431,
+  "video_size_bytes": 2155573
+}
+GO2 POLICY VIDEO PASS
+Exit code=0
+End=2026-07-29T18:52:13+00:00
+===== END: 04_targeted_cross_stairs =====
+
+===== START: 05_targeted_cross_slope =====
+Terrain=cross_slope.xml Duration=15 Command=[0.30,0.00,0.00]
+Start=2026-07-29T18:52:13+00:00
+/home/jovyan/conda/envs/go2render/lib/python3.10/site-packages/imageio_ffmpeg/_utils.py:7: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Policy: /home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx
+ONNX input: obs [1, 45]
+time= 0.00s x=+0.000 height=0.445 vx=+0.028
+time= 2.00s x=+0.137 height=0.344 vx=+0.235
+time= 4.00s x=+0.607 height=0.352 vx=+0.260
+time= 6.00s x=+1.120 height=0.353 vx=+0.261
+time= 8.00s x=+1.637 height=0.355 vx=+0.244
+time=10.00s x=+1.978 height=0.356 vx=+0.005
+time=12.00s x=+2.289 height=0.475 vx=+0.034
+time=14.00s x=+2.439 height=0.599 vx=+0.116
+{
+  "status": "PASS",
+  "policy": "/home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx",
+  "video": "/home/jovyan/go2_work/video_evidence_20260730/05_targeted_cross_slope.mp4",
+  "duration_seconds": 15.0,
+  "frames": 442,
+  "label": "05_targeted_cross_slope",
+  "terrain": "cross_slope.xml",
+  "command_x": 0.30000001192092896,
+  "command_y": 0.0,
+  "command_yaw": 0.0,
+  "forward_distance": 2.535351092635826,
+  "minimum_base_height": 0.32065735186597455,
+  "final_base_height": 0.6185922770902659,
+  "video_size_bytes": 3299965
+}
+GO2 POLICY VIDEO PASS
+Exit code=0
+End=2026-07-29T18:54:33+00:00
+===== END: 05_targeted_cross_slope =====
+
+===== START: 06_targeted_race_track =====
+Terrain=race_track.xml Duration=18 Command=[0.35,0.00,0.00]
+Start=2026-07-29T18:54:33+00:00
+/home/jovyan/conda/envs/go2render/lib/python3.10/site-packages/imageio_ffmpeg/_utils.py:7: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Policy: /home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx
+ONNX input: obs [1, 45]
+time= 0.00s x=+0.000 height=0.445 vx=+0.028
+time= 2.00s x=+0.180 height=0.349 vx=+0.300
+time= 4.00s x=+0.654 height=0.374 vx=+0.380
+time= 6.00s x=+0.828 height=0.361 vx=-0.039
+time= 8.00s x=+0.942 height=0.392 vx=+0.115
+time=10.00s x=+1.296 height=0.388 vx=-0.002
+time=12.00s x=+1.300 height=0.382 vx=-0.002
+time=14.00s x=+1.302 height=0.378 vx=+0.008
+time=16.00s x=+1.303 height=0.379 vx=+0.000
+{
+  "status": "PASS",
+  "policy": "/home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx",
+  "video": "/home/jovyan/go2_work/video_evidence_20260730/06_targeted_race_track.mp4",
+  "duration_seconds": 18.0,
+  "frames": 530,
+  "label": "06_targeted_race_track",
+  "terrain": "race_track.xml",
+  "command_x": 0.3499999940395355,
+  "command_y": 0.0,
+  "command_yaw": 0.0,
+  "forward_distance": 1.3048645257501252,
+  "minimum_base_height": 0.31585902177244185,
+  "final_base_height": 0.3767231692022515,
+  "video_size_bytes": 3043358
+}
+GO2 POLICY VIDEO PASS
+Exit code=0
+End=2026-07-29T18:57:23+00:00
+===== END: 06_targeted_race_track =====
+Manifest rows: 7
+GO2 VIDEO MATRIX PASS

@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "policy": "/home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx",
+  "video": "/home/jovyan/go2_work/video_evidence_20260730/04_targeted_cross_stairs.mp4",
+  "duration_seconds": 15.0,
+  "frames": 442,
+  "label": "04_targeted_cross_stairs",
+  "terrain": "cross_stairs.xml",
+  "command_x": 0.2199999988079071,
+  "command_y": 0.0,
+  "command_yaw": 0.0,
+  "forward_distance": 0.2521342933984776,
+  "minimum_base_height": 0.32065735186597455,
+  "final_base_height": 0.3353166002724431,
+  "video_size_bytes": 2155573
+}

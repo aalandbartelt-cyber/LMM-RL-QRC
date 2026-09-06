@@ -1,0 +1,30 @@
+/home/jovyan/conda/envs/go2render/lib/python3.10/site-packages/imageio_ffmpeg/_utils.py:7: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Policy: /home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx
+ONNX input: obs [1, 45]
+time= 0.00s x=+0.000 height=0.445 vx=+0.028
+time= 2.00s x=+0.155 height=0.348 vx=+0.258
+time= 4.00s x=+0.666 height=0.353 vx=+0.269
+time= 6.00s x=+1.176 height=0.364 vx=+0.272
+time= 8.00s x=+1.466 height=0.391 vx=-0.044
+time=10.00s x=+1.749 height=0.446 vx=+0.161
+time=12.00s x=+2.101 height=0.511 vx=+0.153
+time=14.00s x=+2.505 height=0.589 vx=-0.060
+time=16.00s x=+2.894 height=0.654 vx=+0.285
+{
+  "status": "PASS",
+  "policy": "/home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx",
+  "video": "/home/jovyan/go2_work/video_evidence_20260730/03_targeted_stairs_forward.mp4",
+  "duration_seconds": 18.0,
+  "frames": 530,
+  "label": "03_targeted_stairs_forward",
+  "terrain": "stairs.xml",
+  "command_x": 0.3199999928474426,
+  "command_y": 0.0,
+  "command_yaw": 0.0,
+  "forward_distance": 3.2646261982787137,
+  "minimum_base_height": 0.30502203619034773,
+  "final_base_height": 0.67830093535577,
+  "video_size_bytes": 4383443
+}
+GO2 POLICY VIDEO PASS

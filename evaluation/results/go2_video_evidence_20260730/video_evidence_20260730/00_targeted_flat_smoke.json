@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "policy": "/home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx",
+  "video": "/home/jovyan/go2_work/video_evidence_20260730/00_targeted_flat_smoke.mp4",
+  "duration_seconds": 5.0,
+  "frames": 250,
+  "label": "targeted_model5001_flat_smoke",
+  "terrain": "flat.xml",
+  "command_x": 0.4000000059604645,
+  "command_y": 0.0,
+  "command_yaw": 0.0,
+  "forward_distance": 1.3106000784824645,
+  "minimum_base_height": 0.32065735186597455,
+  "final_base_height": 0.34919553134784753,
+  "video_size_bytes": 1731199
+}

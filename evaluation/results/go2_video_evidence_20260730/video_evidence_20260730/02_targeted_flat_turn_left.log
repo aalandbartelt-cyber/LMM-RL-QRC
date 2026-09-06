@@ -1,0 +1,26 @@
+/home/jovyan/conda/envs/go2render/lib/python3.10/site-packages/imageio_ffmpeg/_utils.py:7: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Policy: /home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx
+ONNX input: obs [1, 45]
+time= 0.00s x=+0.000 height=0.445 vx=+0.028
+time= 2.00s x=+0.076 height=0.353 vx=+0.215
+time= 4.00s x=+0.320 height=0.337 vx=+0.196
+time= 6.00s x=+0.188 height=0.355 vx=+0.141
+time= 8.00s x=-0.129 height=0.347 vx=+0.272
+{
+  "status": "PASS",
+  "policy": "/home/jovyan/go2_work/handoff_20260728/stage3_targeted_model5001/export/policy.onnx",
+  "video": "/home/jovyan/go2_work/video_evidence_20260730/02_targeted_flat_turn_left.mp4",
+  "duration_seconds": 10.0,
+  "frames": 295,
+  "label": "02_targeted_flat_turn_left",
+  "terrain": "flat.xml",
+  "command_x": 0.25,
+  "command_y": 0.0,
+  "command_yaw": 0.5,
+  "forward_distance": -0.49110667931617125,
+  "minimum_base_height": 0.32065735186597455,
+  "final_base_height": 0.35562117961993767,
+  "video_size_bytes": 2657759
+}
+GO2 POLICY VIDEO PASS
