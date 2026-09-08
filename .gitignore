@@ -4,6 +4,10 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
+build/
+dist/
+*.egg-info/
+.tmp_wheels/
 /.venv/
 /venv/
 /env/

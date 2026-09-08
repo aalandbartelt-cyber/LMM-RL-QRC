@@ -1,0 +1,10 @@
+{
+  "policy_name": "replace-with-checkpoint-name",
+  "profile": "unitree_rl_lab_relative_joint",
+  "observation_dim": 45,
+  "action_dim": 12,
+  "action_scale": 0.25,
+  "control_dt_s": 0.02,
+  "command_scale": [1.0, 1.0, 1.0],
+  "ang_vel_scale": 0.2
+}

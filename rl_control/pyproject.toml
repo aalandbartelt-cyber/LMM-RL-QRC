@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "go2-campus-rl"
+version = "0.1.0"
+description = "Portable control, mission, safety and evaluation foundations for a Go2 campus robot project"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+go2-campus-rl = "go2_foundation.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["go2_foundation*", "campus_rl*"]

@@ -1,0 +1,14 @@
+{
+  "route_name": "campus_security_patrol",
+  "units": "meters_seconds",
+  "waypoints": [
+    {"name": "P0_主入口起点", "x_m": 0.0, "y_m": -16.0, "dwell_s": 1.0, "task": "mission_start"},
+    {"name": "P1_办公楼门禁", "x_m": -16.0, "y_m": -10.0, "dwell_s": 2.5, "task": "door_and_access_control"},
+    {"name": "P2_西侧围墙盲区", "x_m": -24.0, "y_m": 5.0, "dwell_s": 3.0, "task": "perimeter_intrusion"},
+    {"name": "P3_北侧电子围栏", "x_m": -7.0, "y_m": 15.0, "dwell_s": 2.5, "task": "fence_integrity"},
+    {"name": "P4_仓库防火门", "x_m": 15.0, "y_m": 7.0, "dwell_s": 3.0, "task": "door_fire_smoke"},
+    {"name": "P5_动力机房", "x_m": 21.0, "y_m": -8.0, "dwell_s": 3.0, "task": "equipment_temperature"},
+    {"name": "P6_停车区", "x_m": 13.0, "y_m": -13.0, "dwell_s": 2.0, "task": "vehicle_and_object_check"},
+    {"name": "P7_主入口返航", "x_m": 0.0, "y_m": -16.0, "dwell_s": 1.0, "task": "mission_finish"}
+  ]
+}
