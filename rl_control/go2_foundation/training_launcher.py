@@ -147,5 +147,9 @@ def build_train_command(
 
     # `runpy` preserves the upstream script's normal CLI behaviour.  Its only
     # extra operation is the early import needed to register the campus task.
-    bootstrap = "import campus_rl; import runpy; runpy.run_path(%r, run_name='__main__')" % train_script
+    script_dir = str(Path(train_script).parent)
+    bootstrap = (
+        "import sys; sys.path.insert(0, %r); import campus_rl; import runpy; "
+        "runpy.run_path(%r, run_name='__main__')"
+    ) % (script_dir, train_script)
     return tuple([python_executable, "-c", bootstrap, *common])

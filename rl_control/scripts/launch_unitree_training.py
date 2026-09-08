@@ -47,12 +47,15 @@ def main() -> int:
         checkpoint=args.checkpoint,
     )
     report = verify_unitree_rl_lab_checkout(args.unitree_rl_lab)
+    extra = tuple(args.extra)
+    if extra[:1] == ("--",):
+        extra = extra[1:]
     try:
         command = build_train_command(
             args.unitree_rl_lab,
             spec,
             python_executable=sys.executable,
-            extra_args=tuple(args.extra),
+            extra_args=extra,
         )
     except FileNotFoundError as exc:
         print(json.dumps({"ready": False, "checkout": report, "error": str(exc)}, ensure_ascii=False, indent=2))

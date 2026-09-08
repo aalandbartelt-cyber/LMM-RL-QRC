@@ -4,14 +4,14 @@ Approved design: `2026-09-08-go2-campus-rl-design.md`.
 
 ## Execution
 
-- [ ] Import the teammate's portable package and tests under `rl_control`.
-- [ ] Fix launch sequencing, CLI forwarding, resume handling and provenance.
-- [ ] Add curriculum terrains and conservative locomotion reward overrides.
-- [ ] Integrate campus geometry and feedback-driven physical policy evaluation.
-- [ ] Add pinned environment bootstrap, GPU preflight and platform runbook.
-- [ ] Add artifact integrity verification and local metric plotting.
-- [ ] Run portable tests, compilation, shell syntax and packaging checks.
-- [ ] Review runtime contracts against pinned upstream sources; record GPU gates.
+- [x] Import the teammate's portable package and tests under `rl_control`.
+- [x] Fix launch sequencing, CLI forwarding, resume handling and provenance.
+- [x] Add curriculum terrains and conservative locomotion reward overrides.
+- [x] Integrate campus geometry and feedback-driven physical policy evaluation.
+- [x] Add pinned environment bootstrap, GPU preflight and platform runbook.
+- [x] Add artifact integrity verification and local metric plotting.
+- [x] Run portable tests, compilation, shell syntax and packaging checks.
+- [x] Review runtime contracts against pinned upstream sources; record GPU gates.
 
 ## Boundaries
 

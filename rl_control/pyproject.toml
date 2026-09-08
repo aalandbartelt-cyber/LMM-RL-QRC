@@ -10,6 +10,9 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = []
 
+[project.optional-dependencies]
+analysis = ["matplotlib>=3.8"]
+
 [project.scripts]
 go2-campus-rl = "go2_foundation.__main__:main"
 

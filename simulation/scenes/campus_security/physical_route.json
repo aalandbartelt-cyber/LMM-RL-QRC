@@ -1,0 +1,25 @@
+{
+  "route_name": "campus_security_physical_patrol_v2",
+  "units": "meters_seconds",
+  "waypoints": [
+    {"name": "P0_主入口起点", "x_m": 0.0, "y_m": -16.0, "dwell_s": 1.0, "task": "mission_start"},
+    {"name": "T01_南侧主路入口", "x_m": 0.0, "y_m": -12.0, "task": "pass_through"},
+    {"name": "T02_西侧主路南端", "x_m": -24.0, "y_m": -12.0, "task": "pass_through"},
+    {"name": "T03_西侧主路北端", "x_m": -24.0, "y_m": 5.0, "task": "pass_through"},
+    {"name": "P1_办公楼门禁", "x_m": -16.0, "y_m": 5.0, "dwell_s": 2.5, "task": "door_and_access_control"},
+    {"name": "P2_西侧围墙盲区", "x_m": -24.0, "y_m": 5.0, "dwell_s": 3.0, "task": "perimeter_intrusion"},
+    {"name": "T04_办公楼西北绕行点", "x_m": -24.0, "y_m": 18.0, "task": "pass_through"},
+    {"name": "P3_北侧电子围栏", "x_m": 0.0, "y_m": 18.0, "dwell_s": 2.5, "task": "fence_integrity"},
+    {"name": "T05_中央通道北端", "x_m": 0.0, "y_m": 5.0, "task": "pass_through"},
+    {"name": "P4_仓库防火门", "x_m": 15.0, "y_m": 5.0, "dwell_s": 3.0, "task": "door_fire_smoke"},
+    {"name": "T06_东侧主路北端", "x_m": 24.0, "y_m": 5.0, "task": "pass_through"},
+    {"name": "T07_东侧主路南端", "x_m": 24.0, "y_m": -12.0, "task": "pass_through"},
+    {"name": "P6_停车区", "x_m": 13.0, "y_m": -12.0, "dwell_s": 2.0, "task": "vehicle_and_object_check"},
+    {"name": "T08_南侧主路中央", "x_m": 0.0, "y_m": -12.0, "task": "pass_through"},
+    {"name": "T09_动力机房绕行点", "x_m": -23.0, "y_m": -12.0, "task": "pass_through"},
+    {"name": "P5_动力机房", "x_m": -22.0, "y_m": -2.0, "dwell_s": 3.0, "task": "equipment_temperature"},
+    {"name": "T10_返航南侧主路", "x_m": -23.0, "y_m": -12.0, "task": "pass_through"},
+    {"name": "T11_返航主路中央", "x_m": 0.0, "y_m": -12.0, "task": "pass_through"},
+    {"name": "P7_主入口返航", "x_m": 0.0, "y_m": -16.0, "dwell_s": 1.0, "task": "mission_finish"}
+  ]
+}

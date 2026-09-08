@@ -1,0 +1,10 @@
+{
+  "python": "3.11",
+  "isaac_sim": "5.1.0",
+  "isaac_lab_commit": "3c6e67bb5c7ada942a6d1884ab69338f57596f77",
+  "unitree_rl_lab_commit": "1330cb0d4236c4abd6bf1efec05a4fce7ad79678",
+  "rsl_rl": "2.3.1",
+  "minimum_nvidia_driver": "580.65.06",
+  "minimum_glibc": "2.35",
+  "minimum_free_disk_gib": 70
+}

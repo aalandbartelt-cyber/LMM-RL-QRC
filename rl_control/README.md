@@ -10,9 +10,12 @@ Responsibilities:
 - Provide a policy wrapper for simulation.
 - Evaluate policies with consistent metrics.
 
-Current recommended route:
+Current integrated route:
 
-1. Start with high-level velocity commands.
-2. Reproduce or call an existing Go2 locomotion baseline.
-3. Add RL-MPC-like safe parameters such as speed scale, stability weight, and gait mode.
-4. Avoid direct low-level joint control until simulation and safety supervisor are ready.
+1. Reproduce the pinned official `Unitree-Go2-Velocity` baseline.
+2. Fine-tune `Unitree-Go2-Campus-Velocity` without changing its 45-observation/12-action policy interface.
+3. Use `go2_foundation` to turn mission routes into bounded body-velocity commands and enforce safety checks.
+4. Run `Unitree-Go2-Campus-Route-Eval` for physical stepping, collision and stall evidence.
+5. Preserve at least two seeds, checkpoints, logs, metrics, videos and SHA-256 manifests.
+
+Platform instructions: `../docs/training/SELF5000_GO2_CAMPUS.md`.

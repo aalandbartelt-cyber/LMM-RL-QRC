@@ -27,6 +27,7 @@ from .campus_pipeline import CampusMissionPipeline
 from .interface_audit import InterfaceAuditResult, PolicyInterfaceMetadata, audit_policy_interface
 from .training_launcher import TrainingRunSpec, build_train_command, verify_unitree_rl_lab_checkout
 from .route_mission import MissionWaypoint, RouteVelocityController, RouteVelocityOutput, load_route_file, wrap_angle
+from .route_validation import AxisAlignedObstacle, RouteClearanceIssue, validate_route_clearance
 from .artifact_manifest import ArtifactVerification, PolicyArtifactManifest, sha256_file, verify_policy_manifest
 from .policy import PolicyRunner, ZeroPolicy
 from .safety import SafetyDecision, SafetySupervisor
@@ -70,6 +71,9 @@ __all__ = [
     "RouteVelocityOutput",
     "load_route_file",
     "wrap_angle",
+    "AxisAlignedObstacle",
+    "RouteClearanceIssue",
+    "validate_route_clearance",
     "ArtifactVerification",
     "PolicyArtifactManifest",
     "sha256_file",

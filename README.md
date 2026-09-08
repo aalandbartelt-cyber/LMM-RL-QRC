@@ -111,9 +111,9 @@ The simulator returns task state:
 }
 ```
 
-### RL Control -> Simulation
+### LLM / Route Control -> RL Control
 
-The locomotion policy returns high-level motion commands first:
+The mission and route layers produce bounded body-velocity commands:
 
 ```json
 {
@@ -122,12 +122,22 @@ The locomotion policy returns high-level motion commands first:
   "vy": 0.0,
   "yaw_rate": 0.1,
   "speed_scale": 1.0,
-  "policy_name": "mock_policy_v0",
+  "policy_name": "route_controller_v1",
   "safety_flag": "ok"
 }
 ```
 
-Low-level 12-joint actions should not be used until the policy is stable in simulation and the safety supervisor is ready.
+### RL Control -> Simulation
+
+The pinned Unitree Go2 locomotion policy consumes a 45-value observation and outputs 12 joint-position actions. The project keeps that upstream interface unchanged, while the campus task adjusts terrain curriculum, velocity ranges and selected rewards. A safety layer validates observations, clips actions and stops on fall conditions before deployment.
+
+The integrated entry points are:
+
+- `Unitree-Go2-Campus-Velocity`: mixed-terrain locomotion training.
+- `Unitree-Go2-Campus-Route-Eval`: collision-enabled, feedback-driven campus route evaluation.
+- `simulation/scenes/campus_security/kinematic_preview.py`: visual preview only; it is not RL evidence.
+
+Self-5000 two-GPU commands, runtime gates, packaging and local plotting are documented in [`docs/training/SELF5000_GO2_CAMPUS.md`](docs/training/SELF5000_GO2_CAMPUS.md).
 
 ### Simulation -> RL Control
 

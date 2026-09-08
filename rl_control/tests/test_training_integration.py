@@ -60,6 +60,8 @@ class TrainingIntegrationTests(unittest.TestCase):
             command = build_train_command(root, spec, python_executable="python")
             joined = " ".join(command)
             self.assertIn("import campus_rl", command[2])
+            self.assertIn("sys.path.insert", command[2])
+            self.assertIn(repr(str((root / "scripts" / "rsl_rl").resolve())), command[2])
             self.assertIn("--task Unitree-Go2-Campus-Velocity", joined)
             self.assertIn("--resume", command)
             self.assertIn("--load_run baseline_run", joined)
@@ -87,6 +89,23 @@ class TrainingIntegrationTests(unittest.TestCase):
         ):
             self.assertIn(name, source)
         self.assertIn('id="Unitree-Go2-Campus-Velocity"', source)
+
+    def test_route_evaluator_is_policy_driven_without_root_teleportation(self):
+        root = Path(__file__).parents[2]
+        config_source = Path("campus_rl/campus_route_eval.py").read_text(encoding="utf-8")
+        evaluator_source = (
+            root / "simulation" / "scenes" / "campus_security" / "evaluate_physical_route.py"
+        ).read_text(encoding="utf-8")
+        compile(config_source, "campus_route_eval.py", "exec")
+        compile(evaluator_source, "evaluate_physical_route.py", "exec")
+        self.assertIn('id="Unitree-Go2-Campus-Route-Eval"', config_source)
+        for building in ("office", "warehouse", "power_room", "gate_house"):
+            self.assertIn(building, config_source)
+        self.assertIn("torch.jit.load", evaluator_source)
+        self.assertIn("vel_command_b", evaluator_source)
+        self.assertIn("gym.wrappers.RecordVideo", evaluator_source)
+        self.assertIn("args_cli.enable_cameras = True", evaluator_source)
+        self.assertNotIn("write_root_pose_to_sim", evaluator_source)
 
 
 if __name__ == "__main__":
