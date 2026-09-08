@@ -30,6 +30,8 @@ class LegacyIsaacGymCurriculumTests(unittest.TestCase):
         self.assertIn("max_init_terrain_level = 2", source)
         self.assertIn('QRC_LEARNING_RATE", "0.0003"', source)
         self.assertIn('QRC_EXPECT_SOURCE_ITERATION", "5001"', source)
+        self.assertIn("env_cfg.seed = args.seed", source)
+        self.assertIn("train_cfg.seed = args.seed", source)
         self.assertNotIn("Jul28_", source)
 
     def test_launcher_uses_two_isolated_physical_gpus(self):
@@ -38,6 +40,7 @@ class LegacyIsaacGymCurriculumTests(unittest.TestCase):
         self.assertIn('--seed="${SEED}"', source)
         self.assertIn("model_${CHECKPOINT}.pt", source)
         self.assertIn('"${ENV_PREFIX}/bin/python" -u', source)
+        self.assertIn("CUDA DEVICE PREFLIGHT PASS", source)
         self.assertIn("nohup", source)
         self.assertIn("TRAINING PROCESS CHECK PASS", source)
         self.assertNotIn("torchrun", source)

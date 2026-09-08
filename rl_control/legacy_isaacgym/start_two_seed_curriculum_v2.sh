@@ -42,6 +42,46 @@ export LD_LIBRARY_PATH="${ENV_PREFIX}/lib:${LD_LIBRARY_PATH:-}"
 STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 PID_FILES=()
 
+PREFLIGHT_PIDS=()
+PREFLIGHT_LOGS=()
+for GPU in 0 1; do
+    PREFLIGHT_LOG="${OUTPUT_ROOT}/preflight_${STAMP}_gpu${GPU}.log"
+    (
+        CUDA_VISIBLE_DEVICES="${GPU}" "${ENV_PREFIX}/bin/python" -u - <<'PY'
+from isaacgym import gymapi, gymtorch  # noqa: F401
+import torch
+
+if not torch.cuda.is_available():
+    raise RuntimeError("CUDA is unavailable")
+if torch.cuda.device_count() != 1:
+    raise RuntimeError(f"Expected one visible GPU, got {torch.cuda.device_count()}")
+x = torch.randn((1024, 1024), device="cuda:0")
+y = x @ x
+torch.cuda.synchronize()
+if not bool(torch.isfinite(y).all()):
+    raise RuntimeError("CUDA produced non-finite output")
+print("CUDA DEVICE PREFLIGHT PASS", torch.cuda.get_device_name(0))
+PY
+    ) >"${PREFLIGHT_LOG}" 2>&1 &
+    PREFLIGHT_PIDS+=("$!")
+    PREFLIGHT_LOGS+=("${PREFLIGHT_LOG}")
+done
+
+PREFLIGHT_FAILED=0
+for INDEX in 0 1; do
+    if wait "${PREFLIGHT_PIDS[INDEX]}"; then
+        tail -n 3 "${PREFLIGHT_LOGS[INDEX]}"
+    else
+        echo "CUDA preflight failed for physical GPU ${INDEX}." >&2
+        tail -n 80 "${PREFLIGHT_LOGS[INDEX]}" >&2
+        PREFLIGHT_FAILED=1
+    fi
+done
+if [[ "${PREFLIGHT_FAILED}" -ne 0 ]]; then
+    echo "Training was not started because the two-GPU CUDA gate failed." >&2
+    exit 3
+fi
+
 for GPU in 0 1; do
     SEED=$((GPU + 1))
     RUN_NAME="curriculum_v2_seed${SEED}_${STAMP}"

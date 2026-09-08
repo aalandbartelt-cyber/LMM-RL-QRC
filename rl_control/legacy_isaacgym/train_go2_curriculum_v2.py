@@ -52,6 +52,9 @@ def train(args) -> None:
     action_std = float(os.environ.get("QRC_ACTION_STD", "0.25"))
 
     env_cfg, train_cfg = task_registry.get_cfgs(args.task)
+    if args.seed is not None:
+        env_cfg.seed = args.seed
+        train_cfg.seed = args.seed
     env_cfg.terrain.terrain_proportions = list(TERRAIN_PROPORTIONS)
     env_cfg.terrain.max_init_terrain_level = 2
     env_cfg.commands.ranges.lin_vel_x = [-0.10, 0.70]
@@ -73,6 +76,7 @@ def train(args) -> None:
     print("LEARNING_RATE:", learning_rate)
     print("ENTROPY_COEF:", entropy_coef)
     print("ACTION_STD:", action_std)
+    print("EFFECTIVE_SEED:", env_cfg.seed)
 
     env, _ = task_registry.make_env(name=args.task, args=args, env_cfg=env_cfg)
     runner, train_cfg = task_registry.make_alg_runner(env=env, args=args, train_cfg=train_cfg)
