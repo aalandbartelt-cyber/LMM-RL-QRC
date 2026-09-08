@@ -152,9 +152,48 @@ py -3.11 .\rl_control\scripts\plot_training_metrics.py `
 
 脚本同时生成同名 CSV，后续可直接用于论文表格和多种子均值统计。
 
-## 12. 旧驱动回退边界
+## 12. 当前 535 驱动节点的 Isaac Gym 回退路线
 
-如果平台仍是 535 系列驱动，保留 7 月已经验证的 Isaac Gym/go2rl 环境和归档，只用于复现旧 locomotion 基线或定向地形训练。不要把旧 Isaac Gym checkpoint 直接加载进本项目的 Isaac Lab 任务，两套资产、观测配置和训练栈必须分别留存。新 Campus 场景训练应更换满足门禁的节点，或改在本地兼容 RTX 主机执行。
+当前自强平台节点实测为 glibc 2.31、NVIDIA Driver 535.129.03、可用磁盘约 29.46 GiB，不满足 Isaac Sim 5.1 的宿主门禁。Conda 无法升级宿主 glibc 或 NVIDIA 驱动，因此不要在这个容器中继续安装 Isaac Sim。已经持久化的 Isaac Gym、`go2rl` 和 `go2_rl_gym-master` 可继续完成 Go2 locomotion 优化，但它与新的 Campus Isaac Lab 场景是两套独立训练栈。
+
+两张 A100 分别运行一个独立种子；每个进程只看到一张物理卡并使用逻辑 `cuda:0`。先拉取最新脚本：
+
+```bash
+cd ~/go2_work/LMM-RL-QRC
+git pull --ff-only
+source /opt/conda/etc/profile.d/conda.sh
+conda activate /home/jovyan/conda/envs/go2rl
+export LD_LIBRARY_PATH="$CONDA_PREFIX/lib:${LD_LIBRARY_PATH:-}"
+```
+
+确认稳定的控制模型仍然存在：
+
+```bash
+find ~/go2_work/go2_rl_gym-master/logs/go2_baseline \
+  -mindepth 2 -maxdepth 2 -type f \
+  -path '*stage3_control*' -name 'model_5001.pt' \
+  -printf '%T@ %p\n' | sort -nr | head
+```
+
+先运行两个种子各 5 轮、512 环境的恢复冒烟。脚本只会自动选择目录名包含 `stage3_control` 的 `model_5001.pt`，不会误用退化的 targeted 模型：
+
+```bash
+bash rl_control/legacy_isaacgym/start_two_seed_curriculum_v2.sh \
+  auto 5001 5 512
+bash rl_control/legacy_isaacgym/show_progress.sh 5
+```
+
+看到两个种子均出现 `GO2 CURRICULUM V2 TRAINING PASS` 后，用 `Ctrl+C` 退出监视，再开始正式训练：
+
+```bash
+bash rl_control/legacy_isaacgym/start_two_seed_curriculum_v2.sh \
+  auto 5001 600 4096
+bash rl_control/legacy_isaacgym/show_progress.sh 10
+```
+
+正式训练采用较低学习率 `3e-4`、熵系数 `0.005`、动作标准差 `0.25`，并从较低地形等级重新建立课程。地形占比为 wave/slope/rough slope/stairs up/stairs down/obstacles/stepping stones/gap/flat = `0.05/0.15/0.05/0.25/0.10/0.20/0/0/0.20`，用来减少上次对台阶和障碍过度定向训练造成的灾难性遗忘。
+
+两个种子的最终 checkpoint 预计为 `model_5601.pt`。训练日志位于 `~/go2_work/legacy_curriculum_v2`，模型位于 `~/go2_work/go2_rl_gym-master/logs/go2_baseline`。周期保存的候选模型文件名为 `model_5100.pt` 至 `model_5600.pt`，最终模型为 `model_5601.pt`；旧版 runner 的周期 checkpoint 内部迭代元数据不可靠，因此只用最终 checkpoint 继续恢复训练。
 
 ## 13. 销毁容器前
 
