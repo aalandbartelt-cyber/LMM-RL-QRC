@@ -32,6 +32,8 @@ fail() {
 parse_gpu_selection() {
     [[ -n "${QRC_EVAL_GPUS//[[:space:]]/}" ]] || \
         fail "QRC_EVAL_GPUS must select one or two physical GPU indices"
+    [[ "${QRC_EVAL_GPUS}" != *$'\n'* && "${QRC_EVAL_GPUS}" != *$'\r'* ]] || \
+        fail "QRC_EVAL_GPUS must be a single space-separated line"
     read -r -a PHYSICAL_GPUS <<<"${QRC_EVAL_GPUS}"
     (( ${#PHYSICAL_GPUS[@]} >= 1 && ${#PHYSICAL_GPUS[@]} <= 2 )) || \
         fail "QRC_EVAL_GPUS must contain one or two physical GPU indices"

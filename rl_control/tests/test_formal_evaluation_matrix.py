@@ -155,7 +155,7 @@ class FormalLauncherContractTests(unittest.TestCase):
         self.assertIn('([0]="1")', result.stdout)
 
     def test_gpu_selection_rejects_invalid_values(self):
-        for value in ("", "0 0", "gpu0", "-1", "0 1 2"):
+        for value in ("", "0 0", "gpu0", "-1", "0 1 2", "0\n1 2"):
             with self.subTest(value=value):
                 result = source_launcher(
                     "parse_gpu_selection",
