@@ -19,11 +19,60 @@ DURATION_SECONDS="20"
 COMMAND_VX="0.5"
 COMMAND_VY="0.0"
 COMMAND_YAW="0.0"
+QRC_EVAL_GPUS="${QRC_EVAL_GPUS-0 1}"
+PHYSICAL_GPUS=()
 
 
 fail() {
     echo "ERROR: $*" >&2
     exit 2
+}
+
+
+parse_gpu_selection() {
+    [[ -n "${QRC_EVAL_GPUS//[[:space:]]/}" ]] || \
+        fail "QRC_EVAL_GPUS must select one or two physical GPU indices"
+    read -r -a PHYSICAL_GPUS <<<"${QRC_EVAL_GPUS}"
+    (( ${#PHYSICAL_GPUS[@]} >= 1 && ${#PHYSICAL_GPUS[@]} <= 2 )) || \
+        fail "QRC_EVAL_GPUS must contain one or two physical GPU indices"
+
+    local index
+    local gpu
+    local normalized
+    local seen=" "
+    for index in "${!PHYSICAL_GPUS[@]}"; do
+        gpu="${PHYSICAL_GPUS[${index}]}"
+        [[ "${gpu}" =~ ^[0-9]+$ ]] || fail "Invalid physical GPU index: ${gpu}"
+        normalized="$((10#${gpu}))"
+        [[ "${seen}" != *" ${normalized} "* ]] || \
+            fail "Duplicate physical GPU index: ${gpu}"
+        PHYSICAL_GPUS[${index}]="${normalized}"
+        seen+="${normalized} "
+    done
+}
+
+
+validate_gpu_selection_availability() {
+    local gpu_count="$1"
+    local gpu
+    for gpu in "${PHYSICAL_GPUS[@]}"; do
+        (( gpu < gpu_count )) || \
+            fail "Physical GPU index ${gpu} is unavailable; nvidia-smi reports ${gpu_count} GPU(s)"
+    done
+}
+
+
+read_manifest_gpu_list() {
+    local output_root="$1"
+    local value=""
+    if [[ -f "${output_root}/manifest.txt" ]]; then
+        value="$(
+            sed -n 's/^physical_gpus=//p' "${output_root}/manifest.txt" |
+                head -n 1 | tr -d '\r'
+        )"
+    fi
+    [[ -n "${value//[[:space:]]/}" ]] || value="0 1"
+    printf '%s\n' "${value}"
 }
 
 
@@ -35,7 +84,7 @@ require_runtime() {
     command -v nvidia-smi >/dev/null || fail "nvidia-smi is unavailable"
     local gpu_count
     gpu_count="$(nvidia-smi -L | grep -c '^GPU ' || true)"
-    (( gpu_count >= 2 )) || fail "Expected at least two physical GPUs, found ${gpu_count}"
+    validate_gpu_selection_availability "${gpu_count}"
 }
 
 
@@ -94,6 +143,7 @@ write_manifest() {
         echo "repository_commit=$(git -C "${REPO}" rev-parse HEAD)"
         echo "started_utc=$(date -u +%Y%m%dT%H%M%SZ)"
         echo "python=${PYTHON}"
+        echo "physical_gpus=${PHYSICAL_GPUS[*]}"
         echo "evaluation_seeds=${EVALUATION_SEEDS[*]}"
         echo "terrains=${TERRAINS}"
         echo "num_envs=${NUM_ENVS}"
@@ -119,6 +169,7 @@ write_manifest() {
 
 seed_smoke_gate() {
     local output_root="$1"
+    local gpu="$2"
     local smoke_dir="${output_root}/seed_smoke"
     mkdir -p "${smoke_dir}"
     rm -f "${smoke_dir}/flat.json" "${smoke_dir}/eval.log" \
@@ -126,7 +177,7 @@ seed_smoke_gate() {
 
     (
         cd "${GYM}"
-        env CUDA_VISIBLE_DEVICES=0 \
+        env CUDA_VISIBLE_DEVICES="${gpu}" \
             QRC_TERRAIN=flat \
             QRC_DURATION_SECONDS=5 \
             QRC_COMMAND_VX="${COMMAND_VX}" \
@@ -152,24 +203,23 @@ seed_smoke_gate() {
 
 write_queues() {
     local output_root="$1"
-    local queue0="${output_root}/workers/gpu0.queue"
-    local queue1="${output_root}/workers/gpu1.queue"
-    : >"${queue0}"
-    : >"${queue1}"
+    rm -f "${output_root}"/workers/gpu*.queue
+    local gpu
+    for gpu in "${PHYSICAL_GPUS[@]}"; do
+        : >"${output_root}/workers/gpu${gpu}.queue"
+    done
     local index=0
     local seed
     local queue
+    local queue_gpu
     local record
     for seed in "${EVALUATION_SEEDS[@]}"; do
         for record in \
             "baseline5001|${seed}|${BASE_RUN}|5001" \
             "curriculum_seed1_5601|${seed}|${CURRICULUM1_RUN}|5601" \
             "curriculum_seed2_5601|${seed}|${CURRICULUM2_RUN}|5601"; do
-            if (( index % 2 == 0 )); then
-                queue="${queue0}"
-            else
-                queue="${queue1}"
-            fi
+            queue_gpu="${PHYSICAL_GPUS[$((index % ${#PHYSICAL_GPUS[@]}))]}"
+            queue="${output_root}/workers/gpu${queue_gpu}.queue"
             printf '%s\n' "${record}" >>"${queue}"
             index=$((index + 1))
         done
@@ -283,14 +333,25 @@ worker_mode() {
 
 coordinate_mode() {
     local output_root="$1"
+    local -a coordinator_gpus
+    local gpu
+    local all_pass
+    read -r -a coordinator_gpus <<<"$(read_manifest_gpu_list "${output_root}")"
     while true; do
-        if [[ -f "${output_root}/workers/WORKER_0_FAILED" || \
-              -f "${output_root}/workers/WORKER_1_FAILED" ]]; then
-            date -u +%Y%m%dT%H%M%SZ >"${output_root}/MATRIX_FAILED"
-            exit 2
-        fi
-        if [[ -f "${output_root}/workers/WORKER_0_PASS" && \
-              -f "${output_root}/workers/WORKER_1_PASS" ]]; then
+        for gpu in "${coordinator_gpus[@]}"; do
+            if [[ -f "${output_root}/workers/WORKER_${gpu}_FAILED" ]]; then
+                date -u +%Y%m%dT%H%M%SZ >"${output_root}/MATRIX_FAILED"
+                exit 2
+            fi
+        done
+
+        all_pass=1
+        for gpu in "${coordinator_gpus[@]}"; do
+            if [[ ! -f "${output_root}/workers/WORKER_${gpu}_PASS" ]]; then
+                all_pass=0
+            fi
+        done
+        if (( all_pass == 1 )); then
             break
         fi
         sleep 15
@@ -306,9 +367,12 @@ ensure_workers_stopped() {
     local output_root="$1"
     local pid_file
     local pid
-    for pid_file in "${output_root}"/workers/gpu[01].pid; do
+    for pid_file in "${output_root}"/workers/gpu*.pid \
+        "${output_root}/workers/coordinator.pid"; do
         [[ -f "${pid_file}" ]] || continue
         pid="$(cat "${pid_file}")"
+        [[ "${pid}" =~ ^[1-9][0-9]*$ ]] || \
+            fail "Invalid evaluation PID file: ${pid_file}"
         if kill -0 "${pid}" 2>/dev/null && \
             ps -p "${pid}" -o args= | grep -Fq "${output_root}"; then
             fail "An evaluation worker is already running: pid=${pid}"
@@ -318,6 +382,7 @@ ensure_workers_stopped() {
 
 
 start_mode() {
+    parse_gpu_selection
     require_runtime
     resolve_models
     export LD_LIBRARY_PATH="${ENV_PREFIX}/lib:${LD_LIBRARY_PATH:-}"
@@ -326,24 +391,25 @@ start_mode() {
     mkdir -p "${output_root}/workers"
     output_root="$(cd "${output_root}" && pwd -P)"
     ensure_workers_stopped "${output_root}"
+    rm -f "${output_root}"/workers/gpu*.pid \
+        "${output_root}/workers/coordinator.pid"
     rm -f "${output_root}/MATRIX_FAILED" "${output_root}/FORMAL_MATRIX_PASS" \
         "${output_root}/formal_policy_summary.csv" \
         "${output_root}/formal_policy_summary.json" "${output_root}/SHA256SUMS" \
-        "${output_root}/workers/WORKER_0_FAILED" \
-        "${output_root}/workers/WORKER_1_FAILED" \
-        "${output_root}/workers/WORKER_0_PASS" \
-        "${output_root}/workers/WORKER_1_PASS"
+        "${output_root}"/workers/WORKER_*_FAILED \
+        "${output_root}"/workers/WORKER_*_PASS
 
-    gpu_preflight 0
-    gpu_preflight 1
+    local gpu
+    for gpu in "${PHYSICAL_GPUS[@]}"; do
+        gpu_preflight "${gpu}"
+    done
     write_manifest "${output_root}"
-    seed_smoke_gate "${output_root}"
+    seed_smoke_gate "${output_root}" "${PHYSICAL_GPUS[0]}"
     write_queues "${output_root}"
     printf '%s\n' "${output_root}" >"${LATEST_POINTER}"
 
-    local gpu
     local worker_pid
-    for gpu in 0 1; do
+    for gpu in "${PHYSICAL_GPUS[@]}"; do
         nohup "${SCRIPT_PATH}" worker "${gpu}" "${output_root}" \
             "${output_root}/workers/gpu${gpu}.queue" \
             >"${output_root}/workers/gpu${gpu}.log" 2>&1 </dev/null &
@@ -358,6 +424,11 @@ start_mode() {
     echo "OUTPUT_ROOT=${output_root}"
     echo "FORMAL EVALUATION MATRIX START PASS"
 }
+
+
+if [[ "${QRC_SOURCE_ONLY:-0}" == "1" ]]; then
+    return 0 2>/dev/null || exit 0
+fi
 
 
 MODE="${1:-start}"
