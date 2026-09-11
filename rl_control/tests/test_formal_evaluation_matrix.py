@@ -138,9 +138,10 @@ class FormalMatrixAggregationTests(unittest.TestCase):
 
 class FormalLauncherContractTests(unittest.TestCase):
     def test_gpu_selection_defaults_to_two_physical_gpus(self):
-        result = source_launcher(
-            "parse_gpu_selection; declare -p PHYSICAL_GPUS",
-            env={"QRC_EVAL_GPUS": "0 1"},
+        result = run_bash(
+            f'unset QRC_EVAL_GPUS; export QRC_SOURCE_ONLY=1; '
+            f'source "{LAUNCHER_RELATIVE}"; parse_gpu_selection; '
+            "declare -p PHYSICAL_GPUS",
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('([0]="0" [1]="1")', result.stdout)
@@ -166,6 +167,14 @@ class FormalLauncherContractTests(unittest.TestCase):
         result = source_launcher(
             "parse_gpu_selection; validate_gpu_selection_availability 1",
             env={"QRC_EVAL_GPUS": "1"},
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("unavailable", result.stderr.lower())
+
+    def test_gpu_selection_rejects_an_overflowing_index(self):
+        result = source_launcher(
+            "parse_gpu_selection; validate_gpu_selection_availability 1",
+            env={"QRC_EVAL_GPUS": "18446744073709551616"},
         )
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("unavailable", result.stderr.lower())

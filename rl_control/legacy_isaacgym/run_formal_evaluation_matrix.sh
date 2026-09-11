@@ -38,16 +38,17 @@ parse_gpu_selection() {
 
     local index
     local gpu
-    local normalized
     local seen=" "
     for index in "${!PHYSICAL_GPUS[@]}"; do
         gpu="${PHYSICAL_GPUS[${index}]}"
         [[ "${gpu}" =~ ^[0-9]+$ ]] || fail "Invalid physical GPU index: ${gpu}"
-        normalized="$((10#${gpu}))"
-        [[ "${seen}" != *" ${normalized} "* ]] || \
+        while [[ "${#gpu}" -gt 1 && "${gpu}" == 0* ]]; do
+            gpu="${gpu#0}"
+        done
+        [[ "${seen}" != *" ${gpu} "* ]] || \
             fail "Duplicate physical GPU index: ${gpu}"
-        PHYSICAL_GPUS[${index}]="${normalized}"
-        seen+="${normalized} "
+        PHYSICAL_GPUS[${index}]="${gpu}"
+        seen+="${gpu} "
     done
 }
 
@@ -55,9 +56,13 @@ parse_gpu_selection() {
 validate_gpu_selection_availability() {
     local gpu_count="$1"
     local gpu
+    [[ "${gpu_count}" =~ ^[0-9]+$ ]] || fail "Invalid nvidia-smi GPU count: ${gpu_count}"
     for gpu in "${PHYSICAL_GPUS[@]}"; do
-        (( gpu < gpu_count )) || \
+        if (( ${#gpu} > ${#gpu_count} )) || \
+            { (( ${#gpu} == ${#gpu_count} )) && \
+              (( 10#${gpu} >= 10#${gpu_count} )); }; then
             fail "Physical GPU index ${gpu} is unavailable; nvidia-smi reports ${gpu_count} GPU(s)"
+        fi
     done
 }
 
