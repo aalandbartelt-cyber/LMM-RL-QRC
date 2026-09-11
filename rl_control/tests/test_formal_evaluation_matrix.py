@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -12,6 +13,12 @@ LAUNCHER = (
     / "rl_control"
     / "legacy_isaacgym"
     / "run_formal_evaluation_matrix.sh"
+)
+STATUS_SCRIPT = (
+    REPOSITORY_ROOT
+    / "rl_control"
+    / "legacy_isaacgym"
+    / "show_formal_evaluation_status.sh"
 )
 
 
@@ -116,6 +123,22 @@ class FormalLauncherContractTests(unittest.TestCase):
         self.assertIn("aggregate_formal_matrix.py", source)
         self.assertIn("latest_formal_eval_dir.txt", source)
         self.assertNotIn("watch ", source)
+
+
+class FormalStatusContractTests(unittest.TestCase):
+    def test_status_is_read_only_and_reports_acceptance_markers(self):
+        source = STATUS_SCRIPT.read_text(encoding="utf-8")
+        self.assertIn("latest_formal_eval_dir.txt", source)
+        self.assertIn('${1:-', source)
+        self.assertIn("COMPLETE", source)
+        self.assertIn("FAILED", source)
+        self.assertIn("WORKER_0_PASS", source)
+        self.assertIn("WORKER_1_PASS", source)
+        self.assertIn("FORMAL_MATRIX_PASS", source)
+        self.assertIn("kill -0", source)
+        self.assertNotIn("watch ", source)
+        for invocation in re.findall(r"\bkill\s+[^\n]+", source):
+            self.assertTrue(invocation.startswith("kill -0"), invocation)
 
 
 if __name__ == "__main__":
