@@ -17,11 +17,24 @@ fi
     exit 2
 }
 
+PHYSICAL_GPUS=(0 1)
+manifest_gpu_list=""
+if [[ -f "${OUTPUT_ROOT}/manifest.txt" ]]; then
+    manifest_gpu_list="$(
+        sed -n 's/^physical_gpus=//p' "${OUTPUT_ROOT}/manifest.txt" |
+            head -n 1 | tr -d '\r'
+    )"
+fi
+if [[ -n "${manifest_gpu_list//[[:space:]]/}" ]]; then
+    read -r -a PHYSICAL_GPUS <<<"${manifest_gpu_list}"
+fi
+
 echo "===== GO2 FORMAL EVALUATION STATUS ====="
 echo "utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 echo "output_root=${OUTPUT_ROOT}"
 
-for name in gpu0 gpu1 coordinator; do
+for gpu in "${PHYSICAL_GPUS[@]}"; do
+    name="gpu${gpu}"
     pid_file="${OUTPUT_ROOT}/workers/${name}.pid"
     if [[ ! -f "${pid_file}" ]]; then
         echo "${name}_pid=missing"
@@ -35,18 +48,37 @@ for name in gpu0 gpu1 coordinator; do
     fi
 done
 
+name="coordinator"
+pid_file="${OUTPUT_ROOT}/workers/${name}.pid"
+if [[ ! -f "${pid_file}" ]]; then
+    echo "${name}_pid=missing"
+else
+    pid="$(cat "${pid_file}")"
+    if kill -0 "${pid}" 2>/dev/null; then
+        echo "${name}_pid=${pid} status=running"
+    else
+        echo "${name}_pid=${pid} status=exited"
+    fi
+fi
+
 complete_count="$(find "${OUTPUT_ROOT}" -type f -name COMPLETE | wc -l)"
 failed_count="$(find "${OUTPUT_ROOT}" -type f -name FAILED | wc -l)"
 echo "jobs_complete=${complete_count}/9"
 echo "jobs_failed=${failed_count}"
 
-for marker in \
-    workers/WORKER_0_PASS \
-    workers/WORKER_1_PASS \
-    workers/WORKER_0_FAILED \
-    workers/WORKER_1_FAILED \
-    MATRIX_FAILED \
-    FORMAL_MATRIX_PASS; do
+for gpu in "${PHYSICAL_GPUS[@]}"; do
+    for marker in \
+        "workers/WORKER_${gpu}_PASS" \
+        "workers/WORKER_${gpu}_FAILED"; do
+        if [[ -f "${OUTPUT_ROOT}/${marker}" ]]; then
+            echo "marker=${marker} present"
+        else
+            echo "marker=${marker} absent"
+        fi
+    done
+done
+
+for marker in MATRIX_FAILED FORMAL_MATRIX_PASS; do
     if [[ -f "${OUTPUT_ROOT}/${marker}" ]]; then
         echo "marker=${marker} present"
     else
