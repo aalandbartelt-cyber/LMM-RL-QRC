@@ -171,6 +171,9 @@ def evaluate(args):
     command_yaw = float(os.environ.get("QRC_COMMAND_YAW", "0.0"))
 
     env_cfg, train_cfg = task_registry.get_cfgs(name=args.task)
+    if args.seed is not None:
+        env_cfg.seed = args.seed
+        train_cfg.seed = args.seed
     env_cfg.env.num_envs = args.num_envs or 256
     env_cfg.env.test = True
     env_cfg.terrain.num_rows = 8

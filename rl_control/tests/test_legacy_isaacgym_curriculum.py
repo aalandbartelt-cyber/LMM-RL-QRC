@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).parents[1]
 TRAINER = ROOT / "legacy_isaacgym" / "train_go2_curriculum_v2.py"
 LAUNCHER = ROOT / "legacy_isaacgym" / "start_two_seed_curriculum_v2.sh"
+EVALUATOR = ROOT.parent / "evaluation" / "scripts" / "evaluate_go2_terrain.py"
 
 
 def assigned_literal(source: str, name: str):
@@ -44,6 +45,12 @@ class LegacyIsaacGymCurriculumTests(unittest.TestCase):
         self.assertIn("nohup", source)
         self.assertIn("TRAINING PROCESS CHECK PASS", source)
         self.assertNotIn("torchrun", source)
+
+    def test_evaluator_propagates_reported_seed_to_runtime_configs(self):
+        source = EVALUATOR.read_text(encoding="utf-8")
+        compile(source, str(EVALUATOR), "exec")
+        self.assertIn("env_cfg.seed = args.seed", source)
+        self.assertIn("train_cfg.seed = args.seed", source)
 
 
 if __name__ == "__main__":
