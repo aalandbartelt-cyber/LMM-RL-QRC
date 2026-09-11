@@ -273,7 +273,7 @@ Expected: every command exits 0 with no syntax error.
 
 Run `git diff main...HEAD --check`, inspect the full diff, and confirm: default `0 1`; explicit one-GPU support; invalid/unavailable rejection; per-GPU preflight; first-GPU smoke; nine jobs once; dynamic workers/coordinator/status; manifest persistence; legacy status fallback; no metric, policy, checkpoint, seed, terrain, ranking, or aggregation changes.
 
-- [ ] **Step 4: Commit the checked plan and merge locally to main**
+- [x] **Step 4: Commit the checked plan and merge locally to main**
 
 Check all completed boxes, commit the plan update, switch to the primary checkout, and fast-forward `main` to the verified feature branch. Re-run focused tests and Bash syntax checks on `main` after integration.
 
