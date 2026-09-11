@@ -277,6 +277,6 @@ Run `git diff main...HEAD --check`, inspect the full diff, and confirm: default 
 
 Check all completed boxes, commit the plan update, switch to the primary checkout, and fast-forward `main` to the verified feature branch. Re-run focused tests and Bash syntax checks on `main` after integration.
 
-- [ ] **Step 5: Publish source without starting evaluation**
+- [x] **Step 5: Publish source without starting evaluation**
 
 Push the verified `main` when GitHub is reachable. If the paid container cannot use Git, export a binary patch from the remote base commit and provide checksum-verified transfer/apply commands. Do not run the formal launcher locally or on the paid host during this step.
