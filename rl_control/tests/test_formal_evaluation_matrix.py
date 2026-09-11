@@ -1,6 +1,9 @@
 import importlib.util
 import json
+import os
 import re
+import shlex
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -21,6 +24,8 @@ STATUS_SCRIPT = (
     / "show_formal_evaluation_status.sh"
 )
 GITATTRIBUTES = REPOSITORY_ROOT / ".gitattributes"
+LAUNCHER_RELATIVE = LAUNCHER.relative_to(REPOSITORY_ROOT).as_posix()
+STATUS_RELATIVE = STATUS_SCRIPT.relative_to(REPOSITORY_ROOT).as_posix()
 
 
 def load_aggregator():
@@ -29,6 +34,34 @@ def load_aggregator():
     assert spec.loader is not None
     spec.loader.exec_module(module)
     return module
+
+
+def run_bash(script: str, *, env=None):
+    merged_env = os.environ.copy()
+    if env:
+        merged_env.update(env)
+        exports = "; ".join(
+            f"export {name}={shlex.quote(value)}" for name, value in env.items()
+        )
+        script = f"{exports}; {script}"
+    return subprocess.run(
+        ["bash", "-c", script],
+        cwd=REPOSITORY_ROOT,
+        env=merged_env,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        capture_output=True,
+        check=False,
+    )
+
+
+def source_launcher(command: str, *, env=None):
+    script = (
+        f'export QRC_SOURCE_ONLY=1; source "{LAUNCHER_RELATIVE}"; '
+        f"{command}"
+    )
+    return run_bash(script, env=env)
 
 
 class FormalMatrixAggregationTests(unittest.TestCase):
@@ -104,6 +137,56 @@ class FormalMatrixAggregationTests(unittest.TestCase):
 
 
 class FormalLauncherContractTests(unittest.TestCase):
+    def test_gpu_selection_defaults_to_two_physical_gpus(self):
+        result = source_launcher(
+            "parse_gpu_selection; declare -p PHYSICAL_GPUS",
+            env={"QRC_EVAL_GPUS": "0 1"},
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('([0]="0" [1]="1")', result.stdout)
+
+    def test_gpu_selection_accepts_one_gpu(self):
+        result = source_launcher(
+            "parse_gpu_selection; declare -p PHYSICAL_GPUS",
+            env={"QRC_EVAL_GPUS": "1"},
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('([0]="1")', result.stdout)
+
+    def test_gpu_selection_rejects_invalid_values(self):
+        for value in ("", "0 0", "gpu0", "-1", "0 1 2"):
+            with self.subTest(value=value):
+                result = source_launcher(
+                    "parse_gpu_selection",
+                    env={"QRC_EVAL_GPUS": value},
+                )
+                self.assertNotEqual(result.returncode, 0, result.stdout)
+
+    def test_gpu_selection_rejects_an_unavailable_index(self):
+        result = source_launcher(
+            "parse_gpu_selection; validate_gpu_selection_availability 1",
+            env={"QRC_EVAL_GPUS": "1"},
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("unavailable", result.stderr.lower())
+
+    def test_one_gpu_queue_contains_all_nine_jobs_once(self):
+        with tempfile.TemporaryDirectory(dir=REPOSITORY_ROOT) as directory:
+            root = Path(directory)
+            relative_root = root.relative_to(REPOSITORY_ROOT).as_posix()
+            (root / "workers").mkdir()
+            result = source_launcher(
+                'PHYSICAL_GPUS=(1); BASE_RUN=base; '
+                'CURRICULUM1_RUN=curriculum1; CURRICULUM2_RUN=curriculum2; '
+                f"write_queues {shlex.quote(relative_root)}",
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            queue = root / "workers" / "gpu1.queue"
+            records = queue.read_text(encoding="utf-8").splitlines()
+            self.assertEqual(len(records), 9)
+            self.assertEqual(len(set(records)), 9)
+            self.assertFalse((root / "workers" / "gpu0.queue").exists())
+
     def test_launcher_encodes_fixed_protocol_and_isolated_workers(self):
         source = LAUNCHER.read_text(encoding="utf-8")
         self.assertIn("EVALUATION_SEEDS=(20260911 20260912 20260913)", source)
@@ -123,6 +206,15 @@ class FormalLauncherContractTests(unittest.TestCase):
         self.assertIn("model_5601.pt", source)
         self.assertIn("aggregate_formal_matrix.py", source)
         self.assertIn("latest_formal_eval_dir.txt", source)
+        self.assertIn('QRC_EVAL_GPUS="${QRC_EVAL_GPUS-0 1}"', source)
+        self.assertIn('echo "physical_gpus=${PHYSICAL_GPUS[*]}"', source)
+        self.assertIn('seed_smoke_gate "${output_root}" "${PHYSICAL_GPUS[0]}"', source)
+        self.assertIn('for gpu in "${PHYSICAL_GPUS[@]}"; do', source)
+        self.assertIn("read_manifest_gpu_list", source)
+        self.assertNotIn("WORKER_0_FAILED", source)
+        self.assertNotIn("WORKER_1_FAILED", source)
+        self.assertNotIn("WORKER_0_PASS", source)
+        self.assertNotIn("WORKER_1_PASS", source)
         self.assertNotIn("watch ", source)
 
 
@@ -133,13 +225,50 @@ class FormalStatusContractTests(unittest.TestCase):
         self.assertIn('${1:-', source)
         self.assertIn("COMPLETE", source)
         self.assertIn("FAILED", source)
-        self.assertIn("WORKER_0_PASS", source)
-        self.assertIn("WORKER_1_PASS", source)
+        self.assertIn("physical_gpus", source)
+        self.assertIn("PHYSICAL_GPUS=(0 1)", source)
+        self.assertIn('for gpu in "${PHYSICAL_GPUS[@]}"; do', source)
+        self.assertIn('WORKER_${gpu}_PASS', source)
+        self.assertIn('WORKER_${gpu}_FAILED', source)
         self.assertIn("FORMAL_MATRIX_PASS", source)
         self.assertIn("kill -0", source)
         self.assertNotIn("watch ", source)
         for invocation in re.findall(r"\bkill\s+[^\n]+", source):
             self.assertTrue(invocation.startswith("kill -0"), invocation)
+
+    def test_status_uses_manifest_gpu_selection(self):
+        with tempfile.TemporaryDirectory(dir=REPOSITORY_ROOT) as directory:
+            root = Path(directory)
+            (root / "workers").mkdir()
+            (root / "manifest.txt").write_text(
+                "physical_gpus=1\n", encoding="utf-8"
+            )
+            relative_root = root.relative_to(REPOSITORY_ROOT).as_posix()
+            result = run_bash(
+                f'bash "{STATUS_RELATIVE}" {shlex.quote(relative_root)}',
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("gpu1_pid=missing", result.stdout)
+            self.assertNotIn("gpu0_pid=", result.stdout)
+            self.assertIn("marker=workers/WORKER_1_PASS absent", result.stdout)
+            self.assertNotIn("marker=workers/WORKER_0_PASS", result.stdout)
+
+    def test_status_falls_back_to_two_gpus_for_legacy_manifest(self):
+        with tempfile.TemporaryDirectory(dir=REPOSITORY_ROOT) as directory:
+            root = Path(directory)
+            (root / "workers").mkdir()
+            (root / "manifest.txt").write_text(
+                "repository_commit=legacy\n", encoding="utf-8"
+            )
+            relative_root = root.relative_to(REPOSITORY_ROOT).as_posix()
+            result = run_bash(
+                f'bash "{STATUS_RELATIVE}" {shlex.quote(relative_root)}',
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("gpu0_pid=missing", result.stdout)
+            self.assertIn("gpu1_pid=missing", result.stdout)
+            self.assertIn("marker=workers/WORKER_0_PASS absent", result.stdout)
+            self.assertIn("marker=workers/WORKER_1_PASS absent", result.stdout)
 
 
 class ShellPortabilityTests(unittest.TestCase):
