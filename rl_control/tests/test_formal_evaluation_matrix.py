@@ -20,6 +20,7 @@ STATUS_SCRIPT = (
     / "legacy_isaacgym"
     / "show_formal_evaluation_status.sh"
 )
+GITATTRIBUTES = REPOSITORY_ROOT / ".gitattributes"
 
 
 def load_aggregator():
@@ -139,6 +140,14 @@ class FormalStatusContractTests(unittest.TestCase):
         self.assertNotIn("watch ", source)
         for invocation in re.findall(r"\bkill\s+[^\n]+", source):
             self.assertTrue(invocation.startswith("kill -0"), invocation)
+
+
+class ShellPortabilityTests(unittest.TestCase):
+    def test_shell_scripts_are_pinned_to_lf(self):
+        attributes = GITATTRIBUTES.read_text(encoding="utf-8")
+        self.assertIn("*.sh text eol=lf", attributes)
+        for path in (LAUNCHER, STATUS_SCRIPT):
+            self.assertNotIn(b"\r\n", path.read_bytes(), str(path))
 
 
 if __name__ == "__main__":
