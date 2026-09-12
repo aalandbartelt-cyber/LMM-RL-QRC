@@ -54,3 +54,6 @@ evaluation/plots/**/*.png
 !evaluation/results/**/*.mp4
 !evaluation/results/**/*.csv
 !evaluation/results/**/*.log
+
+# Local generated submission media
+/outputs/

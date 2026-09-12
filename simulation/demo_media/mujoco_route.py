@@ -161,7 +161,7 @@ def _route_geoms(route: tuple[Point, ...]) -> str:
 
 def _campus_geoms() -> str:
     return """
-    <geom name="office" type="box" pos="-1.25 2.9 0.55" size="0.75 0.42 0.55" material="building_blue"/>
+    <geom name="office" type="box" pos="-1.30 2.82 0.55" size="0.75 0.28 0.55" material="building_blue"/>
     <geom name="warehouse" type="box" pos="1.25 2.95 0.45" size="0.80 0.40 0.45" material="building_sand"/>
     <geom name="power_room" type="box" pos="-1.45 1.20 0.32" size="0.42 0.38 0.32" material="building_gray"/>
     <geom name="gatehouse" type="box" pos="-0.55 -0.35 0.26" size="0.30 0.22 0.26" material="building_gray"/>
@@ -175,7 +175,7 @@ def _disaster_geoms() -> str:
     <geom name="safe_zone" type="box" pos="0 0 0.008" size="0.50 0.45 0.008" rgba="0.12 0.65 0.42 1" contype="0" conaffinity="0"/>
     <geom name="rubble_1" type="box" pos="1.05 0.67 0.025" size="0.20 0.28 0.025" euler="0 0 0.2" rgba="0.48 0.39 0.32 1"/>
     <geom name="rubble_2" type="box" pos="1.42 1.06 0.035" size="0.22 0.25 0.035" euler="0 0 -0.15" rgba="0.55 0.44 0.34 1"/>
-    <geom name="ramp" type="box" pos="1.85 1.45 0.045" size="0.38 0.34 0.035" euler="0 0.10 0.75" rgba="0.50 0.48 0.43 1"/>
+    <geom name="ramp" type="box" pos="1.85 1.45 0.024" size="0.38 0.34 0.022" euler="0 0.10 0.75" rgba="0.50 0.48 0.43 1"/>
     <geom name="collapsed_wall_a" type="box" pos="2.80 0.45 0.30" size="0.62 0.12 0.12" euler="0 0.3 0.4" material="building_sand"/>
     <geom name="collapsed_wall_b" type="box" pos="3.15 0.65 0.22" size="0.45 0.10 0.10" euler="0 -0.2 -0.6" material="building_gray"/>
     <geom name="target_beacon" type="cylinder" pos="3.05 2.08 0.25" size="0.10 0.25" rgba="0.1 0.85 0.95 1" contype="0" conaffinity="0"/>
@@ -259,8 +259,13 @@ def simulate_route(
     model = mujoco.MjModel.from_xml_string(build_scene_xml(scenario, go2_xml))
     model.opt.timestep = DT
     data = mujoco.MjData(model)
+    route = compact_route(scenario)
     data.qpos[2] = 0.43
     data.qpos[7:] = DEFAULT_JOINT_POS
+    # Face the first route segment so the initial waypoint turn stays well
+    # inside the stable basin of the proportional heading controller.
+    heading = math.atan2(route[1].y - route[0].y, route[1].x - route[0].x)
+    data.qpos[3:7] = (math.cos(heading / 2.0), 0.0, 0.0, math.sin(heading / 2.0))
     mujoco.mj_forward(model, data)
     actor = CheckpointActor(checkpoint)
     renderer = mujoco.Renderer(model, height=render_size[1], width=render_size[0])
@@ -269,7 +274,6 @@ def simulate_route(
     camera.distance = 4.3
     camera.azimuth = 135.0
     camera.elevation = -23.0
-    route = compact_route(scenario)
     result_holder: dict[str, RouteResult | None] = {"result": None}
 
     def generate() -> Iterator[PhysicsFrame]:
