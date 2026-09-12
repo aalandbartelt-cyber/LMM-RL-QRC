@@ -57,3 +57,6 @@ evaluation/plots/**/*.png
 
 # Local generated submission media
 /outputs/
+
+# Submission evidence videos
+!报告素材_20260912/**/*.mp4
