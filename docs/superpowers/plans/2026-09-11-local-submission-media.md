@@ -4,9 +4,9 @@
 
 **Goal:** Build a deterministic local pipeline that generates two labeled simulation videos, report-ready figures, a combined pitch video, and a verifiable media manifest without cloud GPU use.
 
-**Architecture:** Scenario configuration and deterministic mission timelines are separated from OpenCV/Pillow rendering. A single CLI generates task-level digital-twin frames, embeds existing checkpoint-5001 physics footage as explicitly labeled evidence, produces Matplotlib result figures, and validates every output before writing a SHA-256 manifest.
+**Architecture:** Scenario configuration and deterministic mission timelines are separated from MuJoCo policy execution and OpenCV/Pillow presentation. The baseline5001 actor receives proprioceptive observations and high-level route velocity commands, while all root motion comes from MuJoCo integration. A single CLI renders both physical route runs, produces Matplotlib result figures, and validates every output before writing a SHA-256 manifest.
 
-**Tech Stack:** Python 3.14, OpenCV, Pillow, NumPy, Matplotlib, JSON, pytest
+**Tech Stack:** Python 3.14, MuJoCo, PyTorch/ONNX Runtime, OpenCV, Pillow, NumPy, Matplotlib, JSON, pytest
 
 ---
 
@@ -149,20 +149,30 @@ git commit -m "Render labeled local mission simulations"
 ### Task 4: Build the media generator and validation manifest
 
 **Files:**
+- Create: `simulation/demo_media/mujoco_route.py`
 - Create: `simulation/demo_media/generate_submission_media.py`
 - Modify: `simulation/tests/test_demo_media.py`
 - Modify: `.gitignore`
 
-- [ ] **Step 1: Add failing CLI helper tests**
+- [ ] **Step 1: Add failing route-policy and CLI helper tests**
 
 ```python
 from simulation.demo_media.generate_submission_media import validate_video, sha256_file
+from simulation.demo_media.mujoco_route import compact_route, route_command
 
 
 def test_sha256_file_is_stable(tmp_path):
     path = tmp_path / "sample.bin"
     path.write_bytes(b"go2")
     assert sha256_file(path) == "be4fb8841ddfa79756046f79946b71a6147cb1c1d2ed13cd3430d04a197eafc3"
+
+
+def test_compact_route_starts_at_origin_and_route_command_moves_forward():
+    route = compact_route(build_scenarios()["campus_security"])
+    assert (route[0].x, route[0].y) == (0.0, 0.0)
+    command = route_command(0.0, 0.0, 0.0, route[1], 0.5)
+    assert command.forward_mps > 0.0
+    assert abs(command.yaw_rate_rps) <= 1.0
 ```
 
 - [ ] **Step 2: Run the tests to verify RED**
@@ -173,7 +183,7 @@ Expected: import failure for `generate_submission_media`.
 
 - [ ] **Step 3: Implement generation and validation**
 
-The CLI accepts `--output-dir`, `--duration`, `--fps`, and `--quick`. It generates both scenario videos, hero frames, the formal comparison figure, architecture figure, evidence contact sheet, combined pitch video, README, and JSON manifest. `validate_video()` reopens each MP4 with OpenCV and verifies frame count, width, height, FPS, and nonzero duration. Add `/outputs/` to `.gitignore`.
+Implement `compact_route()` and the feedback route command, load the actor from the verified baseline5001 checkpoint or exported ONNX, and run the 12-joint policy in MuJoCo without writing the root pose. The CLI accepts `--output-dir`, `--policy`, `--go2-assets`, `--duration`, `--fps`, and `--quick`. It generates both physical scenario videos, hero frames, the formal comparison figure, architecture figure, evidence contact sheet, combined pitch video, README, and JSON manifest. `validate_video()` reopens each MP4 with OpenCV and verifies frame count, width, height, FPS, and nonzero duration. Add `/outputs/` to `.gitignore`.
 
 - [ ] **Step 4: Run unit tests**
 
