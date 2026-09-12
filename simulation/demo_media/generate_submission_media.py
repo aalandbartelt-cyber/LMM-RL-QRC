@@ -288,8 +288,7 @@ def make_architecture_figure(output: Path) -> None:
         (8.4, 6.1, 3.4, 1.7, "安全监督器\n限速 / 禁行区 / 姿态约束", "#3a2b1a"),
         (12.4, 6.1, 3.0, 1.7, "路线控制器\n航点 → 速度指令", "#11243a"),
         (16.0, 6.1, 2.7, 1.7, "RL 运动策略\nbaseline5001", "#123a2c"),
-        (12.4, 2.2, 3.0, 1.7, "MuJoCo\n高保真动力学", "#241a3a"),
-        (16.0, 2.2, 2.7, 1.7, "Go2\n四足机器人", "#241a3a"),
+        (13.5, 2.2, 5.2, 1.7, "MuJoCo 高保真动力学\nGo2 四足机器人", "#241a3a"),
         (4.4, 2.2, 4.6, 1.7, "自强5000平台\n云端训练 + 63组正式评测", "#3a1a24"),
     ]
     for x, y, w, h, label, color in boxes:
@@ -301,14 +300,17 @@ def make_architecture_figure(output: Path) -> None:
         (11.9, 6.95, 12.3, 6.95),
         (15.5, 6.95, 15.9, 6.95),
         (17.35, 6.0, 17.35, 4.0),
-        (15.9, 3.05, 15.5, 3.05),
-        (12.3, 3.05, 12.3, 6.0),
-        (6.7, 4.0, 6.7, 6.0),
+        (16.2, 4.0, 16.2, 6.0),
+        (13.4, 3.4, 13.9, 6.0),
+        (9.1, 3.05, 13.4, 3.05),
     ]
     for x1, y1, x2, y2 in arrows:
         axis.add_patch(FancyArrowPatch((x1, y1), (x2, y2), arrowstyle="-|>", mutation_scale=22, color="#19c6e6", linewidth=2))
-    axis.text(12.15, 4.6, "速度指令", fontsize=11, color="#9fb3c8", rotation=90, va="center")
-    axis.text(6.45, 5.0, "权重下发", fontsize=11, color="#9fb3c8", rotation=90, va="center")
+    axis.text(15.35, 7.2, "速度指令", fontsize=11, color="#9fb3c8", ha="right")
+    axis.text(17.55, 5.0, "关节目标", fontsize=11, color="#9fb3c8", va="center")
+    axis.text(16.0, 5.0, "状态观测", fontsize=11, color="#9fb3c8", ha="right", va="center")
+    axis.text(13.15, 4.7, "状态反馈", fontsize=11, color="#9fb3c8", rotation=63, va="center")
+    axis.text(11.2, 3.3, "策略权重下发（哈希交接）", fontsize=11, color="#9fb3c8", ha="center")
     axis.text(0.6, 0.7, "证据边界：本地 MuJoCo 仿真用于路线演示与报告可视化；量化成绩以自强5000平台 63 组正式评测为准。", fontsize=12, color="#9fb3c8")
     axis.set_title("系统架构｜AI大模型 + 强化学习 四足机器人智能控制", fontsize=22, color="#f2f7fb", pad=18)
     fig.savefig(output, facecolor=fig.get_facecolor(), bbox_inches="tight")
