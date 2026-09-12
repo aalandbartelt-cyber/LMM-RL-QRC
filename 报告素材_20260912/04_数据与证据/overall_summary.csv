@@ -1,0 +1,4 @@
+rank,policy,mean_success_rate,total_falls,mean_collision_rate,mean_tracking_rmse_mps,mean_mechanical_power_w,mean_tilt_rad
+1,baseline5001,0.969122,177,0.0649875,0.326318,24.8477,0.195569
+2,curriculum_seed1_5601,0.958519,238,0.0752223,0.231898,31.1732,0.169235
+3,curriculum_seed2_5601,0.936384,381,0.0702885,0.217955,34.4919,0.182278

@@ -1,0 +1,81 @@
+{
+  "generated_at": "2026-09-12T12:10:36+0800",
+  "generator": "simulation.demo_media.generate_submission_media",
+  "policy_checkpoint": "C:\\Users\\mary3\\go2_runtime\\baseline5001_20260911\\policy\\model_5001.pt",
+  "go2_assets": "C:\\Users\\mary3\\go2_runtime\\baseline5001_20260911\\resources\\go2\\go2.xml",
+  "quick": false,
+  "outputs": [
+    {
+      "file": "01_campus_security_simulation.mp4",
+      "label": "园区安全巡检路线演示视频（本地仿真）",
+      "bytes": 43862475,
+      "sha256": "64b26d1a7e9831f23a84ae6493402a67881e008070c9dc396fbbf74393a7bf3c",
+      "video": {
+        "width": 1920,
+        "height": 1080,
+        "min_frames": 2244,
+        "fps": 30
+      }
+    },
+    {
+      "file": "02_disaster_response_simulation.mp4",
+      "label": "灾害侦察与物资投送演示视频（本地仿真）",
+      "bytes": 72784825,
+      "sha256": "b5f03e7a8e81bdda6eac786faa7e3961e30f2f2ccf0d466008ca9ac6b849ac07",
+      "video": {
+        "width": 1920,
+        "height": 1080,
+        "min_frames": 3598,
+        "fps": 30
+      }
+    },
+    {
+      "file": "03_hero_campus_security.png",
+      "label": "园区巡检报告关键帧（本地仿真）",
+      "bytes": 208416,
+      "sha256": "f5772a5314e171cf5a4371c190d7aa5c7748ca86fc099b2e99990c01568a8541"
+    },
+    {
+      "file": "04_hero_disaster_response.png",
+      "label": "灾害响应报告关键帧（本地仿真）",
+      "bytes": 263613,
+      "sha256": "c130c5e2f7d686e4a6befb737600ec84277d3249997b670efb2aa304bdae549d"
+    },
+    {
+      "file": "05_formal_evaluation_comparison.png",
+      "label": "三策略正式评测对比图（云端评测快照）",
+      "bytes": 117994,
+      "sha256": "1c8417977d52f262b6f73e9f0a9366fe363627a158b15552700d5d4e028ae8e9"
+    },
+    {
+      "file": "06_training_curves.png",
+      "label": "baseline5001 训练曲线（云端日志）",
+      "bytes": 140650,
+      "sha256": "47f6164bd7c397898b8dc6b328960b7b23a6a91b6ddf2be1ec0a87feb0e78d4d"
+    },
+    {
+      "file": "07_system_architecture.png",
+      "label": "系统架构图",
+      "bytes": 113732,
+      "sha256": "6a233ec130486aa8f18b79ef2d4632336cf619731f6ceac1bf8d4387fc69e702"
+    },
+    {
+      "file": "08_evidence_contact_sheet.png",
+      "label": "证据一览拼图",
+      "bytes": 557473,
+      "sha256": "489837efd868734cb061b836c20a0d3d0c4f1102e59e6de18a17da6c1a389bf3"
+    },
+    {
+      "file": "route_results.json",
+      "label": "本地路线运行结构化结果",
+      "bytes": 687109,
+      "sha256": "834baf1c148585e1772cfd1123309a9e34f74f93e64289f0cbb212ca6fae4772"
+    },
+    {
+      "file": "README.md",
+      "label": "素材包说明与证据边界",
+      "bytes": 1951,
+      "sha256": "58f99e4f05747d1a2adcec43a87fd670165253c8a63488929db628a2be32022f"
+    }
+  ]
+}
